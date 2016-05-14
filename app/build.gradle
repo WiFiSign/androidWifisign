@@ -4,6 +4,8 @@ android {
     compileSdkVersion 23
     buildToolsVersion "23.0.2"
 
+    useLibrary 'org.apache.http.legacy'
+
     defaultConfig {
         applicationId "com.zhanghao.wifiqrsign"
         minSdkVersion 19
@@ -29,4 +31,10 @@ dependencies {
     compile 'com.getbase:floatingactionbutton:1.10.1'
     compile 'com.lovedise:permissiongen:0.0.6'
     compile files('libs/eventbus-3.0.0-beta1.jar')
+
+    compile 'cn.bmob.android:bmob-sdk:3.4.6'
+    compile 'com.squareup.okhttp:okhttp:2.4.0'
+    compile 'com.squareup.okio:okio:1.4.0'
+    compile 'com.android.support:support-v4:23.2.1'
+
 }

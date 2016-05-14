@@ -19,12 +19,14 @@ import android.widget.TextView;
 
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.xys.libzxing.zxing.activity.CaptureActivity;
+import com.zhanghao.wifiqrsign.Bean.SignBean;
 import com.zhanghao.wifiqrsign.Bean.WifiBean;
 import com.zhanghao.wifiqrsign.Event.EventHelper;
 import com.zhanghao.wifiqrsign.Fragment.SignHomeFragment;
 import com.zhanghao.wifiqrsign.Fragment.SignMeFragment;
 import com.zhanghao.wifiqrsign.R;
 import com.zhanghao.wifiqrsign.adapter.MyPagerAdapter;
+import com.zhanghao.wifiqrsign.utils.SharedPreHelper;
 import com.zhanghao.wifiqrsign.utils.WiFiInfoHelper;
 
 import java.io.File;
@@ -33,6 +35,8 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import cn.bmob.v3.Bmob;
+import cn.bmob.v3.listener.SaveListener;
 import de.greenrobot.event.EventBus;
 import kr.co.namee.permissiongen.PermissionFail;
 import kr.co.namee.permissiongen.PermissionGen;
@@ -60,17 +64,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Bind(R.id.action_product_qrcode)
     FloatingActionButton actionProductQrcode;   //生成二维码
     private static final String PACKAGE_URL_SCHEME = "package:";
+    private boolean isOnSigned;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Bmob.initialize(this, "e888d301bea40de3b3f205a4c456af34");
         ButterKnife.bind(this);
         init();
         initToolBar();
         initTabLayout();
         initFloatActionButton();
-        initFile();                     //二维码保存到文件夹
+        initFile();                    //二维码保存到文件夹
     }
 
     private void initFile() {
@@ -151,7 +157,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (resultCode==RESULT_OK){
             Bundle bundle=data.getExtras();
             String result=bundle.getString("result");
-            EventBus.getDefault().post(new EventHelper(Sign(result)));  //
+            EventBus.getDefault().post(new EventHelper(Sign(result)));//
         }
     }
 
@@ -161,12 +167,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         helper.getWifiInfo();
         if (helper.WifiState()){
             Log.d("test",result+"\n"+wifiBean.getBSSID());
-            if (result.equals(wifiBean.getBSSID()))
+            if (result.equals(wifiBean.getBSSID())) {
+                SharedPreHelper sharedPreHelper = new SharedPreHelper(this);
+                String name = sharedPreHelper.getName();
+                String location = sharedPreHelper.getLoc();
+                Log.d("data: ", name + "  " + location);
+                BmobUpload(name, location);
                 return "签到成功";
+            }
             else
                 return "签到失败";
         }else
             return "请链接Wifi";
+    }
+
+    private boolean onSigned() {
+        return isOnSigned;
     }
 
     private void initPermission() {
@@ -223,4 +239,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         startActivity(intent);
     }
 
+
+    private void BmobUpload(String name, String location) {
+        final SignBean signBean = new SignBean();
+
+        signBean.setName(name);
+        signBean.setLocation(location);
+
+        signBean.save(this, new SaveListener() {
+
+            @Override
+            public void onSuccess() {
+                Log.v("Message: " ,"添加数据成功，返回objectId为：" + signBean.getObjectId() + ",数据在服务端的创建时间为：" + signBean.getCreatedAt());
+            }
+
+            @Override
+            public void onFailure(int code, String arg0) {
+                Log.v("Message: ", "添加失败");
+                // 添加失败
+            }
+        });
+    }
 }

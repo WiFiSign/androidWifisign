@@ -10,6 +10,10 @@ public class EventHelper {
         return result;
     }
 
+    public boolean isSignEd() {
+        return isSignEd;
+    }
+
     private String result;
     public EventHelper(String result){
         this.result=result;

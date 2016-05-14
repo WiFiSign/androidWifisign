@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.zhanghao.wifiqrsign.Event.EventHelper;
 import com.zhanghao.wifiqrsign.R;
+import com.zhanghao.wifiqrsign.utils.SharedPreHelper;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -23,10 +24,12 @@ import de.greenrobot.event.ThreadMode;
  * Created by 张浩 on 2016/4/12.
  */
 public class SignHomeFragment extends Fragment {
-    @Bind(R.id.sign_tip1)
-    TextView signTip1;
+    @Bind(R.id.sign_tip)
+    TextView signTip;
+    @Bind(R.id.sign_name)
     TextView signName;
     private String result;
+    private boolean isSigned;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -43,15 +46,24 @@ public class SignHomeFragment extends Fragment {
     }
 
     private void initView() {
-
+        SharedPreHelper sharedPreHelper = new SharedPreHelper(getContext());
+        String name = sharedPreHelper.getName();
+        signName.setText(name);
+        Log.d("Msg", name);
     }
 
     @Subscribe(threadMode = ThreadMode.PostThread)
     public void getMessage(EventHelper event) {
         result = event.getResult();
-        if (result != null && !result.isEmpty()) {
-            signTip1.setText(result);
+        isSigned = event.isSignEd();
+        if (isSigned) {
+            Log.v("isSigned", String.valueOf(isSigned));
+            initView();
         }
+        if (result != null && !result.isEmpty()) {
+            signTip.setText(result);
+        }
+
     }
 
     @Override

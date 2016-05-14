@@ -73,7 +73,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             fab:fab_colorNormal="@color/colorAccent"
-            fab:fab_title="登录"
+            fab:fab_title="切换"
             app:elevation="10dp"
             fab:fab_icon="@drawable/ic_account_circle_white_48dp"
             fab:fab_colorPressed="@color/colorAccentPressed"/>

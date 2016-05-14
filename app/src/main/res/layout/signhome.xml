@@ -14,7 +14,7 @@
         android:layout_gravity="center"
         />
 <TextView
-    android:id="@+id/sign_tip1"
+    android:id="@+id/sign_tip"
     android:layout_marginTop="10dp"
     android:textSize="30sp"
     android:textColor="@color/colorAccent"
