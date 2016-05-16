@@ -143,6 +143,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.action_product_qrcode:
                 startActivity(new Intent(this,CreateSignAddressActivity.class));
+                break;
             case R.id.action_login:
                 LoginDialog dialog = new LoginDialog(MainActivity.this);
                 dialog.show();
