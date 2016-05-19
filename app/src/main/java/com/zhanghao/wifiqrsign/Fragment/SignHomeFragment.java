@@ -46,10 +46,16 @@ public class SignHomeFragment extends Fragment {
     }
 
     private void initView() {
-        SharedPreHelper sharedPreHelper = new SharedPreHelper(getContext());
-        String name = sharedPreHelper.getName();
-        signName.setText(name);
-        Log.d("Msg", name);
+        try {
+            SharedPreHelper sharedPreHelper = new SharedPreHelper(getContext());
+            String name = sharedPreHelper.getName();
+            signName.setText(name);
+            Log.d("Msg", name);
+        }catch (Exception e) {
+            e.printStackTrace();
+
+        }
+
     }
 
     @Subscribe(threadMode = ThreadMode.PostThread)

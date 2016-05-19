@@ -18,6 +18,7 @@ import com.zhanghao.wifiqrsign.R;
 import com.zhanghao.wifiqrsign.utils.SharedPreHelper;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -68,6 +69,7 @@ public class SignMeFragment extends Fragment {
         query.findObjects(getContext(), new FindListener<SignBean>() {
             @Override
             public void onSuccess(List<SignBean> list) {
+                Collections.reverse(list);
                 for (SignBean signBean : list) {
                     String Name = signBean.getName();
                     String Loc = signBean.getLocation();
@@ -76,12 +78,12 @@ public class SignMeFragment extends Fragment {
                     Log.v("Loc:", Loc);
                     Log.v("Time", Time);
                     data.add(map(Name, Loc, Time));
-                    String [] from = new String[] {"Name", "Location", "Time"};
-                    int [] to = new int[] {R.id.SignMe_name, R.id.SignMe_location, R.id.SignMe_time};
-                    SimpleAdapter adapter = new SimpleAdapter(getContext(), data,
-                            R.layout.list_item, from, to);
-                    listView.setAdapter(adapter);
                 }
+                String [] from = new String[] {"Name", "Location", "Time"};
+                int [] to = new int[] {R.id.SignMe_name, R.id.SignMe_location, R.id.SignMe_time};
+                SimpleAdapter adapter = new SimpleAdapter(getContext(), data,
+                        R.layout.list_item, from, to);
+                listView.setAdapter(adapter);
             }
 
             @Override
